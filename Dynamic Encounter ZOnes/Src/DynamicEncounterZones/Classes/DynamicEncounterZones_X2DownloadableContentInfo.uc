@@ -4,6 +4,7 @@ var config float AddWidth;
 var config float AddDepth;
 var config float SubtractOffset;
 var config bool bBoxMode;
+var config bool bKeepGuardPods;
 
 /// <summary>
 /// Called from XComGameState_MissionSite:CacheSelectedMissionData
@@ -16,6 +17,13 @@ static function PostEncounterCreation(out name EncounterName, out PodSpawnInfo E
 	Width = Encounter.EncounterZoneWidth;
 	Depth = Encounter.EncounterZoneDepth;
 	Offset = Encounter.EncounterZoneOffsetAlongLOP;
+
+	//Check for guard pods
+	if(Encounter.EncounterZoneWidth < 10 && default.bKeepGuardPods)
+	{
+		`Log("Found Guard Pod Encounter Width: "$Width$" Depth: "$Depth$" Offset: "$Offset);
+		return;
+	}
 	
 	If (default.bBoxMode)
 	{
