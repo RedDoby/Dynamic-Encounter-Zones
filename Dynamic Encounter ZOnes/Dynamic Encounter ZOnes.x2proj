@@ -9,10 +9,28 @@
     <RootNamespace>Dynamic Encounter ZOnes</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="Config\XcomDEZ.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\XComEditor.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\XComEngine.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Config\XComGame.ini">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="ReadMe.txt" />
+    <Content Include="Src\DynamicEncounterZones\Classes\DynamicEncounterZones_X2DownloadableContentInfo.uc">
+      <SubType>Content</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Config" />
+    <Folder Include="Src" />
+    <Folder Include="Src\DynamicEncounterZones" />
+    <Folder Include="Src\DynamicEncounterZones\Classes" />
   </ItemGroup>
   <Import Project="$(MSBuildLocalExtensionPath)\XCOM2.targets" />
 </Project>
