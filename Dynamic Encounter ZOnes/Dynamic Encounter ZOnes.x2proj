@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Default" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Guid>0756a69f-edaf-403f-b655-faa5a9b40adc</Guid>
+    <Name>Dynamic Encounter Zones</Name>
+    <Description>Players can now dynamically adjust Encounter Zones size and location on the map.</Description>
+    <SteamPublishID>0</SteamPublishID>
+    <AssemblyName>Dynamic Encounter ZOnes</AssemblyName>
+    <RootNamespace>Dynamic Encounter ZOnes</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildLocalExtensionPath)\XCOM2.targets" />
+</Project>
