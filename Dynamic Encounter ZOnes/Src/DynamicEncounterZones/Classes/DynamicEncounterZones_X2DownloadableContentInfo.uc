@@ -4,6 +4,7 @@ var config float AddWidth;
 var config float AddDepth;
 var config float SubtractOffset;
 var config bool bBoxMode;
+var config float BoxModeOffsetDepthRatio;
 var config bool bKeepGuardPods;
 
 /// <summary>
@@ -21,7 +22,7 @@ static function PostEncounterCreation(out name EncounterName, out PodSpawnInfo E
 	//Check for guard pods
 	if(Encounter.EncounterZoneWidth < 10 && default.bKeepGuardPods)
 	{
-		`Log("Found Guard Pod Encounter Width: "$Width$" Depth: "$Depth$" Offset: "$Offset);
+		`LogAI("Found Guard Pod Encounter Width: "$Width$" Depth: "$Depth$" Offset: "$Offset);
 		return;
 	}
 	
@@ -29,6 +30,7 @@ static function PostEncounterCreation(out name EncounterName, out PodSpawnInfo E
 	{
 		If (Width > Depth)
 		{
+			Offset -= (Width - Depth) * default.BoxModeOffsetDepthRatio; 
 			Depth = Width;
 		}
 		else if (Depth > Width)
@@ -45,6 +47,6 @@ static function PostEncounterCreation(out name EncounterName, out PodSpawnInfo E
 	Encounter.EncounterZoneDepth = NewDepth;
 	Encounter.EncounterZoneOffsetAlongLOP = NewOffset;
 
-	`Log("Encounter Width: "$NewWidth$" Depth: "$NewDepth$" Offset: "$NewOffset);
+	`LogAI("Encounter Width: "$NewWidth$" Depth: "$NewDepth$" Offset: "$NewOffset);
 				
 }

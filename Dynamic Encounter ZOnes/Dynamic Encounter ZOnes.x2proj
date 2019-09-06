@@ -21,6 +21,9 @@
     <Content Include="Config\XComGame.ini">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="ModPreview.JPG">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="ReadMe.txt" />
     <Content Include="Src\DynamicEncounterZones\Classes\DynamicEncounterZones_X2DownloadableContentInfo.uc">
       <SubType>Content</SubType>
