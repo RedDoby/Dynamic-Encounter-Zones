@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # XCOM ModBuddy Solution File, Format Version 11.00
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{5DAE07AF-E217-45C1-8DE7-FF99D6011E8A}") = "Dynamic Encounter Zones", "Dynamic Encounter ZOnes\Dynamic Encounter Zones.x2proj", "{CC3E1AC9-D754-44B7-860F-95F4B034F4F7}"
+Project("{5DAE07AF-E217-45C1-8DE7-FF99D6011E8A}") = "Dynamic Encounter Zones", "Dynamic Encounter ZOnes\Dynamic Encounter Zones.x2proj", "{7A864A06-73B6-420E-A43B-01869F4C3546}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Default|XCOM 2 = Default|XCOM 2
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CC3E1AC9-D754-44B7-860F-95F4B034F4F7}.Default|XCOM 2.ActiveCfg = Default|XCOM 2
-		{CC3E1AC9-D754-44B7-860F-95F4B034F4F7}.Default|XCOM 2.Build.0 = Default|XCOM 2
+		{7A864A06-73B6-420E-A43B-01869F4C3546}.Default|XCOM 2.ActiveCfg = Default|XCOM 2
+		{7A864A06-73B6-420E-A43B-01869F4C3546}.Default|XCOM 2.Build.0 = Default|XCOM 2
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
