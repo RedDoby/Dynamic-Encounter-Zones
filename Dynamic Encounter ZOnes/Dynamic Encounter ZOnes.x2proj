@@ -8,6 +8,9 @@
     <AssemblyName>Dynamic Encounter ZOnes</AssemblyName>
     <RootNamespace>Dynamic Encounter ZOnes</RootNamespace>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>bin\Debug\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Content Include="Config\XcomDEZ.ini">
       <SubType>Content</SubType>
