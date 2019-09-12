@@ -2,9 +2,11 @@ class DynamicEncounterZones_X2DownloadableContentInfo extends X2DownloadableCont
 
 var config float AddWidth;
 var config float AddDepth;
-var config float SubtractOffset;
+var config float SubtractOffsetAlongLOP;
+var config float AdjustOffsetFromLOP;
 var config bool bBoxMode;
 var config float BoxModeOffsetDepthRatio;
+var config float BoxModeOffsetWidthRatio;
 var config bool bKeepGuardPods;
 
 /// <summary>
@@ -13,16 +15,19 @@ var config bool bKeepGuardPods;
 /// </summary>
 static function PostEncounterCreation(out name EncounterName, out PodSpawnInfo Encounter, int ForceLevel, int AlertLevel, optional XComGameState_BaseObject SourceObject)
 {
-	local float Width, Depth, Offset, NewWidth, NewDepth, NewOffset;
+	local float Width, Depth, OffsetAlongLOP, OffsetFromLOP, NewWidth, NewDepth, NewOffsetAlongLOP, NewOffsetFromLOP;
 	
 	Width = Encounter.EncounterZoneWidth;
 	Depth = Encounter.EncounterZoneDepth;
-	Offset = Encounter.EncounterZoneOffsetAlongLOP;
+	OffsetAlongLOP = Encounter.EncounterZoneOffsetAlongLOP;
+	OffsetFromLOP = Encounter.EncounterZoneOffsetFromLOP;
+
+	`LogAI("Found Encounter Width: "$Width$" Depth: "$Depth$" OffsetAlongLOP: "$OffsetAlongLOP$" OffsetFromLOP: "$OffsetFromLOP);
 
 	//Check for guard pods
 	if(Encounter.EncounterZoneWidth < 10 && default.bKeepGuardPods)
 	{
-		`LogAI("Found Guard Pod Encounter Width: "$Width$" Depth: "$Depth$" Offset: "$Offset);
+		`LogAI("Found Guard Pod Encounter Width: "$Width$" Depth: "$Depth$" OffsetAlongLOP: "$OffsetAlongLOP);
 		return;
 	}
 	
@@ -30,23 +35,40 @@ static function PostEncounterCreation(out name EncounterName, out PodSpawnInfo E
 	{
 		If (Width > Depth)
 		{
-			Offset -= (Width - Depth) * default.BoxModeOffsetDepthRatio; 
+			OffsetAlongLOP -= (Width - Depth) * default.BoxModeOffsetDepthRatio; 
 			Depth = Width;
 		}
 		else if (Depth > Width)
 		{
+			if (OffsetFromLOP>0)//If it's positive we want to add more
+			{
+				OffsetFromLOP += (Depth - Width) * default.BoxModeOffsetWidthRatio;
+			}
+			else if (OffsetFromLOP<0)//If it's negative we want to subtract more
+			{
+				OffsetFromLOP -= (Depth - Width) * default.BoxModeOffsetWidthRatio;
+			}
 			Width = Depth;
 		}
 	}
 
 	NewWidth = Width + default.AddWidth;
 	NewDepth = Depth + default.AddDepth;
-	NewOffset = Offset - default.SubtractOffset;
+	NewOffsetAlongLOP = OffsetAlongLOP - default.SubtractOffsetAlongLOP;
+	if (OffsetFromLOP>0)//If it's positive we want to add more
+	{
+		NewOffsetFromLOP = OffsetFromLOP + default.AdjustOffsetFromLOP;
+	}
+	else if (OffsetFromLOP<0)//If it's negative we want to subtract more
+	{
+		NewOffsetFromLOP = OffsetFromLOP - default.AdjustOffsetFromLOP;
+	}
 
 	Encounter.EncounterZoneWidth = NewWidth;
 	Encounter.EncounterZoneDepth = NewDepth;
-	Encounter.EncounterZoneOffsetAlongLOP = NewOffset;
+	Encounter.EncounterZoneOffsetAlongLOP = NewOffsetAlongLOP;
+	Encounter.EncounterZoneOffsetFromLOP = NewOffsetFromLOP;
 
-	`LogAI("Encounter Width: "$NewWidth$" Depth: "$NewDepth$" Offset: "$NewOffset);
+	`LogAI("New Encounter Width: "$NewWidth$" Depth: "$NewDepth$" OffsetAlongLOP: "$NewOffsetAlongLOP$" OffsetFromLOP: "$NewOffsetFromLOP);
 				
 }
