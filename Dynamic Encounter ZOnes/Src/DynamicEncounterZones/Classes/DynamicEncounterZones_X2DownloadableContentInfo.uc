@@ -7,7 +7,9 @@ var config float AdjustOffsetFromLOP;
 var config bool bBoxMode;
 var config float BoxModeOffsetDepthRatio;
 var config float BoxModeOffsetWidthRatio;
-var config bool bKeepGuardPods;
+var config float ChanceToKeepGuardPod;
+var config array<name> ExcludedEncounters;
+var config array<string> ExcludedMissionFamilies;
 
 /// <summary>
 /// Called from XComGameState_MissionSite:CacheSelectedMissionData
@@ -15,20 +17,64 @@ var config bool bKeepGuardPods;
 /// </summary>
 static function PostEncounterCreation(out name EncounterName, out PodSpawnInfo Encounter, int ForceLevel, int AlertLevel, optional XComGameState_BaseObject SourceObject)
 {
-	local float Width, Depth, OffsetAlongLOP, OffsetFromLOP, NewWidth, NewDepth, NewOffsetAlongLOP, NewOffsetFromLOP;
-	
+	local float Width, Depth, OffsetAlongLOP, OffsetFromLOP, NewWidth, NewDepth, NewOffsetAlongLOP, NewOffsetFromLOP, Roll;
+	local name ExcludedEncounter;
+	local string ExcludedMissionFamily;
+	local XComGameState_BattleData BattleData;
+	local XComGameState_MissionSite MissionState;
+		
+	MissionState = XComGameState_MissionSite(SourceObject);
+
+	if (MissionState == none)
+	{
+		BattleData = XComGameState_BattleData(`XCOMHISTORY.GetSingleGameStateObjectForClass(class'XComGameState_BattleData', true));
+		if (BattleData == none)
+		{
+			`Log("Could not detect mission type. Aborting with no mission encounter variations applied.");
+			return;
+		}
+		else
+		{
+			MissionState = XComGameState_MissionSite(`XCOMHISTORY.GetGameStateForObjectID(BattleData.m_iMissionID));
+		}
+	}
+
 	Width = Encounter.EncounterZoneWidth;
 	Depth = Encounter.EncounterZoneDepth;
 	OffsetAlongLOP = Encounter.EncounterZoneOffsetAlongLOP;
 	OffsetFromLOP = Encounter.EncounterZoneOffsetFromLOP;
 
-	`LogAI("Found Encounter Width: "$Width$" Depth: "$Depth$" OffsetAlongLOP: "$OffsetAlongLOP$" OffsetFromLOP: "$OffsetFromLOP);
+	`Log("Found Encounter: "$EncounterName$" Width: "$Width$" Depth: "$Depth$" OffsetAlongLOP: "$OffsetAlongLOP$" OffsetFromLOP: "$OffsetFromLOP);
 
-	//Check for guard pods
-	if(Encounter.EncounterZoneWidth < 10 && default.bKeepGuardPods)
+	//Look for excluded mission Families
+	foreach Default.ExcludedMissionFamilies(ExcludedMissionFamily)
 	{
-		`LogAI("Found Guard Pod Encounter Width: "$Width$" Depth: "$Depth$" OffsetAlongLOP: "$OffsetAlongLOP);
-		return;
+		if (MissionState.GeneratedMission.Mission.MissionFamily == ExcludedMissionFamily)
+		{
+			`Log(ExcludedMissionFamily$" Mission Family Excluded: aborting");
+			return;
+		}
+	}
+
+	//Look for excluded encounters in ini
+	foreach Default.ExcludedEncounters(ExcludedEncounter)
+	{
+		If(ExcludedEncounter == EncounterName)
+		{
+			`Log("Encounter Excluded: aborting");
+			return;
+		}
+	}
+	//Check to exclude guard pods using the chance specified in the ini
+	if(Encounter.EncounterZoneWidth < 10)
+	{
+		Roll = `SYNC_FRAND_STATIC();
+		`Log(GetFuncName() $ ": Roll = " @ Roll @ " and chance = " @ Default.ChanceToKeepGuardPod );
+		if (roll < Default.ChanceToKeepGuardPod)
+		{ 
+			`Log("Encounter is a guard pod and did not meet chance to adjust: Aborting");
+			return;
+		}
 	}
 	
 	If (default.bBoxMode)
@@ -69,6 +115,6 @@ static function PostEncounterCreation(out name EncounterName, out PodSpawnInfo E
 	Encounter.EncounterZoneOffsetAlongLOP = NewOffsetAlongLOP;
 	Encounter.EncounterZoneOffsetFromLOP = NewOffsetFromLOP;
 
-	`LogAI("New Encounter Width: "$NewWidth$" Depth: "$NewDepth$" OffsetAlongLOP: "$NewOffsetAlongLOP$" OffsetFromLOP: "$NewOffsetFromLOP);
+	`Log("New Encounter "$EncounterName$" Width: "$NewWidth$" Depth: "$NewDepth$" OffsetAlongLOP: "$NewOffsetAlongLOP$" OffsetFromLOP: "$NewOffsetFromLOP);
 				
 }
